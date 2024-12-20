@@ -131,13 +131,12 @@ resource "aws_security_group" "web_sg" {
   }
 }
 
-# EC2 Instances
 resource "aws_instance" "web" {
   count         = 2
   ami           = "ami-0c02fb55956c7d316" # Amazon Linux 2 AMI
   instance_type = "t2.micro"
   subnet_id     = aws_subnet.public[count.index].id
-  security_groups = [aws_security_group.web_sg.name]
+  vpc_security_group_ids = [aws_security_group.web_sg.id] # Use security group ID here
 
   user_data = <<-EOF
               #!/bin/bash
@@ -152,3 +151,4 @@ resource "aws_instance" "web" {
     Name = "web-instance-${count.index}"
   }
 }
+
